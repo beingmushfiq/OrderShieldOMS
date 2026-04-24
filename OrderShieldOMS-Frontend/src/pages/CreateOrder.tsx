@@ -405,17 +405,7 @@ export const CreateOrder: React.FC = () => {
       <footer className="fixed bottom-0 left-0 md:left-72 right-0 bg-background/80 backdrop-blur-2xl border-t border-outline-variant/10 px-8 py-6 z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.2)]">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-6">
           <div className="hidden lg:flex items-center gap-4">
-            <div className="flex -space-x-3">
-              {[1, 2, 3].map((i) => (
-                <img 
-                  key={i}
-                  className="w-10 h-10 rounded-full border-4 border-background object-cover" 
-                  src={`https://i.pravatar.cc/100?u=${i + 20}`} 
-                  alt="Reviewer"
-                />
-              ))}
-            </div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Admin Session</p>
+            {/* Session Info Removed */}
           </div>
           
           <div className="flex items-center gap-4 w-full lg:w-auto">

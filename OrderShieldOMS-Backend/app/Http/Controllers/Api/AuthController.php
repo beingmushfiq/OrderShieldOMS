@@ -40,7 +40,8 @@ class AuthController extends Controller
             'user' => [
                 'name' => $user->name,
                 'email' => $user->email,
-                'role' => 'admin', // Mock role for now
+                'role' => $user->role,
+                'theme' => $user->theme,
                 'avatar' => 'https://i.pravatar.cc/150?u=' . $user->id
             ]
         ]);
@@ -52,4 +53,18 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Secure session terminated']);
     }
+
+    public function updateTheme(Request $request)
+    {
+        $request->validate([
+            'theme' => 'required|string|in:light,dark',
+        ]);
+
+        $user = $request->user();
+        $user->theme = $request->theme;
+        $user->save();
+
+        return response()->json(['message' => 'Theme updated successfully', 'theme' => $user->theme]);
+    }
 }
+

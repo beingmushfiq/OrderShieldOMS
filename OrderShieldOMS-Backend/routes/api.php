@@ -26,6 +26,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Auth
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', fn(Request $request) => $request->user());
+    Route::patch('/user/theme', [AuthController::class, 'updateTheme']);
 
     // Dashboard summary stats
     Route::get('/dashboard', [DashboardController::class, 'index']);

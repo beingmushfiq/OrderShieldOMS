@@ -32,7 +32,7 @@ export const Alerts: React.FC = () => {
     >
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
         <div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-2">Fraud Alerts</h1>
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-on-surface mb-2">Fraud Alerts</h1>
           <p className="text-on-surface-variant max-w-xl">Live security monitoring. Orders that look suspicious for your review.</p>
         </div>
         <div className="flex gap-4">
@@ -56,7 +56,7 @@ export const Alerts: React.FC = () => {
           <div key={stat.label} className={cn("bg-surface-container rounded-lg p-6 flex flex-col justify-between border-l-4", stat.color)}>
             <span className="text-on-surface-variant text-xs font-bold uppercase tracking-widest">{stat.label}</span>
             <div className="flex items-baseline gap-3 mt-4">
-              <span className="text-3xl font-bold text-white">{stat.value}</span>
+              <span className="text-3xl font-bold text-on-surface">{stat.value}</span>
               <span className={cn("text-sm font-medium", stat.color.replace('border-', 'text-'))}>{stat.change}</span>
             </div>
           </div>
@@ -66,7 +66,7 @@ export const Alerts: React.FC = () => {
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="flex-1 space-y-4">
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-xl font-bold text-white">High Risk Orders</h2>
+            <h2 className="text-xl font-bold text-on-surface">High Risk Orders</h2>
             <div className="flex items-center gap-2 text-on-surface-variant text-sm bg-surface-container-high px-3 py-1 rounded-full">
               <Search size={14} />
               <span>Filter: Score &gt; 80</span>
@@ -93,7 +93,7 @@ export const Alerts: React.FC = () => {
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-3">
-                  <h3 className="font-bold text-white">{user.email}</h3>
+                  <h3 className="font-bold text-on-surface">{user.email}</h3>
                   <span className={cn("px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-tighter", user.bgColor, user.color)}>
                     {user.risk}
                   </span>
@@ -101,7 +101,7 @@ export const Alerts: React.FC = () => {
                 <p className="text-xs text-on-surface-variant mt-1">{user.detail}</p>
               </div>
               <div className="hidden md:flex flex-col items-end gap-1">
-                <span className="text-white font-mono font-bold text-lg">{user.score}/100</span>
+                <span className="text-on-surface font-mono font-bold text-lg">{user.score}/100</span>
                 <span className="text-[10px] text-on-surface-variant uppercase font-bold">Risk Score</span>
               </div>
               <ChevronRight className="text-on-surface-variant group-hover:text-primary transition-colors" size={20} />
@@ -111,7 +111,7 @@ export const Alerts: React.FC = () => {
 
         <aside className="w-full lg:w-[420px] bg-surface-container-highest/40 border border-outline-variant/10 rounded-2xl p-8 sticky top-12 h-fit">
           <div className="flex items-center justify-between mb-8">
-            <h3 className="text-2xl font-bold text-white">Analysis</h3>
+            <h3 className="text-2xl font-bold text-on-surface">Analysis</h3>
             <X className="text-on-surface-variant cursor-pointer" size={24} />
           </div>
           {selectedUser ? (
@@ -126,7 +126,7 @@ export const Alerts: React.FC = () => {
                   <span className="text-2xl font-bold">{selectedUser.score}</span>
                 </div>
                 <div>
-                  <h4 className="font-bold text-white">
+                  <h4 className="font-bold text-on-surface">
                     {selectedUser.score >= 80 ? 'Very High Risk' : selectedUser.score >= 50 ? 'Medium Risk' : 'Low Risk'}
                   </h4>
                   <p className="text-xs text-on-surface-variant">{selectedUser.detail.split('•')[1]?.trim() || 'Checking...'}</p>
@@ -163,7 +163,7 @@ export const Alerts: React.FC = () => {
 
               {isManager && (
                 <div className="pt-6 grid grid-cols-2 gap-4">
-                  <button className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white font-semibold text-sm hover:bg-surface-container-highest transition-colors">
+                  <button className="px-4 py-3 rounded-lg border border-outline-variant/30 text-on-surface font-semibold text-sm hover:bg-surface-container-highest transition-colors">
                     Allow Order
                   </button>
                   <button className="px-4 py-3 rounded-lg bg-error text-on-error font-bold text-sm shadow-[0_0_20px_rgba(255,180,171,0.2)] hover:brightness-110 transition-all">

@@ -2,6 +2,7 @@ import React from 'react';
 import { ChevronRight, Bell, Shield, User } from 'lucide-react';
 import { Page } from '@/src/types';
 import { useAuth } from '@/src/context/AuthContext';
+import ThemeToggle from './ThemeToggle';
 
 interface TopBarProps {
   currentPage: Page;
@@ -24,6 +25,8 @@ export const TopBar: React.FC<TopBarProps> = ({ currentPage, title, onPageChange
       </div>
       
       <div className="flex items-center space-x-4">
+        <ThemeToggle compact />
+
         <button 
           onClick={() => onPageChange('alerts')}
           className="relative p-2 rounded-full hover:bg-surface-container-high transition-colors text-on-surface-variant group active:scale-95 transition-all"

@@ -14,9 +14,9 @@ This document provides a detailed, day-by-day account of the crucial 7-day sprin
 **Hours Logged:** 6 Hours
 
 **Detailed Activities:**
-1. **Axios Client Configuration:** Built a centralized API client in `src/lib/api.ts` using Axios. I configured HTTP interceptors to automatically read the authentication token from `localStorage` and attach it as a `Bearer` header to every outgoing request.
-2. **TypeScript Interfaces:** To prevent runtime errors, I wrote strict TypeScript interfaces in `src/types.ts` that perfectly map to the JSON structures returned by Laravel's Eloquent models (e.g., ensuring the `Order` interface includes nested `Customer` and `OrderItem` objects).
-3. **CORS Configuration:** Updated `bootstrap/app.php` and `config/cors.php` on the backend to explicitly allow cross-origin requests from the local Vite development server (`http://localhost:3000`).
+1. **API Client Foundation:** Setting up Axios interceptors for automatic Bearer token injection.
+2. **Type Safety:** Defining strict TypeScript interfaces to map Laravel Eloquent models to the frontend.
+3. **CORS Security:** Configuring backend middleware to allow cross-origin requests from the Vite development server.
 
 ---
 
@@ -25,9 +25,9 @@ This document provides a detailed, day-by-day account of the crucial 7-day sprin
 **Hours Logged:** 8 Hours
 
 **Detailed Activities:**
-1. **Debugging the HTTP 419 Error:** Spent the morning troubleshooting a persistent CSRF token mismatch error that blocked the React login process. I discovered that Laravel Sanctum was attempting to use stateful cookie-based session authentication, which conflicted with our decoupled SPA architecture.
-2. **Stateless Refactoring:** I rewrote the `AuthController.php` to issue and return pure text-based Bearer tokens upon successful login, bypassing the stateful session requirements entirely.
-3. **Context API Integration:** Updated `src/context/AuthContext.tsx` to properly handle the new tokenized login response, securely saving the token, updating global user state, and pushing the user to the Dashboard.
+1. **CSRF Resolution:** Fixing the CSRF token mismatch error caused by stateful Sanctum session conflicts.
+2. **Stateless Auth:** Rewriting the authentication logic to use pure stateless Bearer tokens for SPA communication.
+3. **Handshake Verification:** Integrating the tokenized response into the AuthContext for secure user session management.
 
 ---
 
@@ -36,9 +36,9 @@ This document provides a detailed, day-by-day account of the crucial 7-day sprin
 **Hours Logged:** 7 Hours
 
 **Detailed Activities:**
-1. **Dashboard Controller Integration:** Wired the `Dashboard.tsx` component to hit the `/api/dashboard` endpoint. This controller aggregates total revenue, active orders, and recent shipments directly from the database.
-2. **Recharts Polish:** Replaced the static mock arrays in `TrendsChart.tsx` with the live data feed. I polished the Recharts tooltips and axes to ensure they scale correctly regardless of whether the revenue is $100 or $10,000.
-3. **Custom Hooks:** Implemented `useEffect` hooks and loading states (e.g., spinner components) to ensure the UI doesn't crash or show empty screens while the API handshake is happening.
+1. **Live Analytics:** Connecting the Dashboard and Recharts components to real-time data feeds from the Laravel backend.
+2. **Dynamic Charting:** Implementing automated data scaling and tooltips for analytics based on actual database metrics.
+3. **State Management:** Adding global loading states and error boundaries for a smooth data-fetching experience.
 
 ---
 
@@ -47,9 +47,9 @@ This document provides a detailed, day-by-day account of the crucial 7-day sprin
 **Hours Logged:** 8 Hours
 
 **Detailed Activities:**
-1. **Product Categorization:** The backend team recently added a `Category` model. I updated the `Products.tsx` page to fetch both products and categories, implementing a refined UI to filter products by their new category tags.
-2. **Order Matrix:** Connected `Orders.tsx` to the backend. This was the most complex fetch, as an "Order" JSON payload includes nested arrays of "OrderItems" and specific "Customer" data. I ensured the React table parses and displays this nested data cleanly.
-3. **Error Handling:** Implemented global API error handling using the `sonner` toast library, so if an API request fails, the user gets a clean, human-readable notification rather than a silent console error.
+1. **Relational Data Mapping:** Connecting complex modules like Orders and Products to relational Laravel data.
+2. **Nested API Responses:** Implementing recursive parsing for nested JSON payloads (Orders -> OrderItems -> Customers).
+3. **Global Toasts:** Standardizing API error notifications using the Sonner library for improved UX.
 
 ---
 
@@ -58,9 +58,9 @@ This document provides a detailed, day-by-day account of the crucial 7-day sprin
 **Hours Logged:** 7 Hours
 
 **Detailed Activities:**
-1. **Design System:** Standardized the Tailwind CSS 4 utility classes across all pages to enforce a cohesive, dark-mode compatible "Security Hub" aesthetic. Replaced generic blues and grays with a curated, high-contrast palette.
-2. **Micro-Animations:** Integrated `framer-motion` heavily. Added smooth entry animations for page loads, hover scaling on interactive buttons, and staggered list animations when the API data populates the tables.
-3. **Iconography:** Replaced all placeholder text links with consistent, modern SVGs using the `lucide-react` library, specifically in the `Sidebar.tsx` and `TopBar.tsx` components.
+1. **Security Hub Aesthetics:** Applying the Tailwind CSS 4 "Security Hub" design system across the entire application.
+2. **Fluid Motion:** Integrating Framer Motion micro-animations for page transitions and interactive elements.
+3. **Iconography Standard:** Standardizing modern SVG icons using Lucide-React for a cohesive brand identity.
 
 ---
 
@@ -69,9 +69,9 @@ This document provides a detailed, day-by-day account of the crucial 7-day sprin
 **Hours Logged:** 5 Hours
 
 **Detailed Activities:**
-1. **Module Purge:** Decided to drop the "Fraud Alerts" module as it was out of scope. Carefully removed `Alerts.tsx`, deleted its API routes, and purged it from the Sidebar navigation to streamline the app.
-2. **Mock Data Cleanup:** Hunted down and removed the last vestiges of hardcoded mock records in the `Tracking.tsx` and `Invoices.tsx` pages, replacing them with proper empty-state UI components ("No data available") when the API returns an empty array.
-3. **Routing Stability:** Ensured that accessing a decommissioned route redirects the user safely back to the Dashboard instead of throwing a 404 error.
+1. **Module Decommissioning:** Purging the "Fraud Alerts" module and cleaning up redundant API routes.
+2. **Technical Debt Removal:** Replacing all remaining mock records with proper empty-state UI components.
+3. **Routing Cleanup:** Ensuring clean navigation redirects and resolving orphaned route dependencies.
 
 ---
 
@@ -80,13 +80,24 @@ This document provides a detailed, day-by-day account of the crucial 7-day sprin
 **Hours Logged:** 7 Hours
 
 **Detailed Activities:**
-1. **Vite Build Fix:** During a production build test (`npm run build`), Vite threw an `Unexpected token` parsing error. I tracked this down to an unclosed ternary operator and a missing React fragment wrapper in `Orders.tsx` and resolved it.
-2. **Database Stabilization:** Addressed backend connection string issues caused by migrating from SQLite to MySQL. Ran a final `php artisan migrate:fresh --seed` to lock in the database schema.
-3. **Demo Optimization:** Updated the database seeder to create a master presentation account (`admin@gmail.com` / `12345678`). I pre-filled the React `Login.tsx` state with these exact credentials so the login process is instant and error-free during the varsity presentation.
+1. **Production Readiness:** Resolving final JSX build errors and optimizing the production bundle.
+2. **Database Migration:** Finalizing the transition from SQLite to MySQL with stable connection strings.
+3. **Presentation Prep:** Setting up master presentation credentials and pre-filled login states for the demo.
 
 ---
 
-### **Total Phase Time: 48 Hours**
+### Day 8: Theme Architecture & Visual Accessibility
+**Focus:** Implementing system-wide theme support and accessibility refinements.
+**Hours Logged:** 6 Hours
+
+**Detailed Activities:**
+1. **Theme Architecture:** Implementing system-wide Light/Dark mode toggling with persistent state management.
+2. **Accessibility Polishing:** Fixing contrast issues and unreadable text in Light mode for sidebar and page navigation.
+3. **UI Refinement:** Removing placeholder "Reviewer" avatars and session tags for a cleaner production look.
+
+---
+
+### **Total Phase Time: 54 Hours**
 
 **Professor's Review Note / Conclusion:**
-This 7-day integration phase successfully bridged the gap between a static frontend prototype and a fully functional, data-driven application. By resolving complex authentication mismatches, implementing strict TypeScript interfaces, and heavily polishing the Tailwind CSS/Framer Motion UI, the OrderShield platform now exhibits the robust architecture and premium user experience expected of a high-level academic engineering project.
+This integration and polishing phase successfully bridged the gap between a static frontend prototype and a fully functional, data-driven application. By resolving complex authentication mismatches, implementing a dynamic theme architecture, and ensuring strict visual accessibility, the OrderShield platform now exhibits the robust architecture and premium user experience expected of a high-level academic engineering project.

@@ -100,7 +100,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onPageChange, onL
             </div>
           </div>
           <div className="flex flex-col">
-            <span className="text-primary font-black text-xs uppercase tracking-widest group-hover:text-white transition-colors">{user?.name}</span>
+            <span className="text-primary font-black text-xs uppercase tracking-widest group-hover:text-on-surface transition-colors">{user?.name}</span>
             <span className="text-on-surface-variant text-[10px] font-bold">{user?.role === 'admin' ? 'Manager' : 'Staff'}</span>
           </div>
         </div>
@@ -137,8 +137,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onPageChange, onL
                       "flex items-center w-full px-8 py-2.5 transition-all group text-left",
                       isActive && !hasSubItems
                         ? "bg-surface-container-high text-primary rounded-r-full mr-4" 
-                        : "text-on-surface-variant hover:text-white hover:bg-surface-container/50",
-                      isAnyChildActive && "text-white"
+                        : "text-on-surface-variant hover:text-primary hover:bg-surface-container/50",
+                      isAnyChildActive && "text-primary"
                     )}
                   >
                     <Icon className="mr-4" size={18} fill={isActive && !hasSubItems ? "currentColor" : "none"} />
@@ -163,7 +163,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onPageChange, onL
                             "flex items-center w-full pl-16 pr-8 py-2 transition-all group text-left text-[10px] uppercase tracking-widest font-bold",
                             currentPage === subItem.id
                               ? "bg-surface-container-high text-primary rounded-r-full mr-4 border-l-2 border-primary" 
-                              : "text-on-surface-variant hover:text-white hover:bg-surface-container/30 border-l-2 border-transparent"
+                              : "text-on-surface-variant hover:text-primary hover:bg-surface-container/30 border-l-2 border-transparent"
                           )}
                         >
                           {subItem.label}

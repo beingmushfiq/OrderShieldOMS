@@ -15,11 +15,13 @@ import { Users } from '@/src/pages/Users';
 import { Profile } from '@/src/pages/Profile';
 import { Page } from '@/src/types';
 import { Toaster } from 'sonner';
+import { ThemeProvider, useTheme } from '@/src/context/ThemeContext';
 import { AuthProvider, useAuth } from '@/src/context/AuthContext';
 import { ErrorBoundary } from '@/src/components/layout/ErrorBoundary';
 
 function AppContent() {
   const { user, logout, isLoading } = useAuth();
+  const { theme } = useTheme();
   const [currentPage, setCurrentPage] = useState<Page>('dash');
 
   const getPageTitle = (page: Page) => {
@@ -100,15 +102,17 @@ function AppContent() {
       </main>
 
       <BottomNav currentPage={currentPage} onPageChange={setCurrentPage} />
-      <Toaster position="top-right" expand={false} richColors theme="dark" />
+      <Toaster position="top-right" expand={false} richColors theme={theme} />
     </div>
   );
 }
 
 export default function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

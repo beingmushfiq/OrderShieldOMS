@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { AuthUser } from '@/src/types';
 import api from '@/src/lib/api';
 import { toast } from 'sonner';
+import { useTheme } from '@/src/context/ThemeContext';
 
 interface AuthContextType {
   user: AuthUser | null;
@@ -15,6 +16,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { setTheme } = useTheme();
 
   // On mount: if a token exists, re-hydrate the user from the API
   useEffect(() => {
@@ -26,9 +28,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setUser({
             name:   response.data.name,
             email:  response.data.email,
-            role:   'admin',
+            role:   response.data.role || 'admin',
             avatar: `https://i.pravatar.cc/150?u=${response.data.id}`,
           });
+          
+          if (response.data.theme) {
+            setTheme(response.data.theme, false);
+          }
         } catch {
           // Token is stale or invalid — clean up
           localStorage.removeItem('token');
@@ -56,6 +62,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       role:   apiUser.role ?? 'admin',
       avatar: apiUser.avatar,
     });
+
+    if (apiUser.theme) {
+      setTheme(apiUser.theme, false);
+    }
 
     toast.success('Security authorization successful');
   };

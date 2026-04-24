@@ -30,7 +30,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentPage, onPageChange 
               onClick={() => onPageChange(item.id)}
               className={cn(
                 "flex flex-col items-center justify-center rounded-2xl p-2 scale-110 transition-all active:scale-95",
-                isActive ? "bg-primary-container text-white shadow-lg shadow-primary/20" : "text-on-surface-variant"
+                isActive ? "bg-primary text-on-primary shadow-lg shadow-primary/20" : "text-on-surface-variant"
               )}
             >
               <Icon size={24} fill={isActive ? "currentColor" : "none"} />
@@ -45,7 +45,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentPage, onPageChange 
             onClick={() => onPageChange(item.id)}
             className={cn(
               "flex flex-col items-center justify-center p-2 transition-all active:scale-90",
-              isActive ? "text-primary" : "text-on-surface-variant hover:text-white"
+              isActive ? "text-primary" : "text-on-surface-variant hover:text-primary"
             )}
           >
             <Icon size={20} fill={isActive ? "currentColor" : "none"} />
