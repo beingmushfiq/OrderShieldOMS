@@ -1,97 +1,77 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Eye, User, Lock, Mail, Phone, Building, Save, Shield } from 'lucide-react';
+import { Eye } from 'lucide-react';
 
 export const Profile: React.FC = () => {
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="px-6 py-8"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="max-w-6xl mx-auto p-6 md:p-12 min-h-screen"
     >
-      <header className="mb-10">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-            <User size={24} />
-          </div>
-          <h2 className="text-3xl font-bold tracking-tight text-on-surface">My Account</h2>
-        </div>
-        <p className="text-on-surface-variant max-w-xl text-sm">
-          Update your personal details, contact info, and password.
+      <header className="mb-12">
+        <h2 className="text-4xl font-bold tracking-tight text-on-surface mb-2">User Profile</h2>
+        <p className="text-on-surface-variant max-w-xl">
+          Manage your account information and security settings.
         </p>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         {/* Update User Profile */}
-        <section className="bg-surface-container rounded-2xl overflow-hidden border border-outline-variant/10 shadow-sm">
-          <div className="bg-surface-container-high/50 px-8 py-5 border-b border-outline-variant/10 flex items-center gap-3">
-            <Shield className="text-primary" size={20} />
-            <h3 className="text-on-surface font-bold">My Info</h3>
+        <section className="bg-white rounded border border-gray-200 shadow-sm overflow-hidden">
+          <div className="bg-gray-50/50 px-6 py-4 border-b border-gray-100">
+            <h3 className="text-gray-700 font-medium text-lg">Update User Profile</h3>
           </div>
           
-          <div className="p-8">
-            <p className="text-xs text-on-surface-variant/70 italic mb-8 flex items-center gap-2">
-              <div className="w-1 h-1 rounded-full bg-primary" />
-              Your basic account information
+          <div className="p-6">
+            <p className="text-xs text-gray-500 italic mb-6">
+              The field labels marked with * are required input fields.
             </p>
 
             <form className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant block ml-1">Username *</label>
-                <div className="relative group">
-                  <input 
-                    type="text" 
-                    className="w-full bg-surface-container-low border-none rounded-xl px-4 py-4 text-sm text-on-surface focus:ring-2 focus:ring-primary/40 transition-all font-bold"
-                    defaultValue="demo_admin"
-                  />
-                  <User className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant/30 group-focus-within:text-primary transition-colors" size={18} />
-                </div>
+              <div>
+                <label className="text-xs text-gray-700 block mb-1">UserName *</label>
+                <input 
+                  type="text" 
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#7c3aed] focus:border-[#7c3aed]"
+                  defaultValue="demo"
+                />
               </div>
               
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant block ml-1">Email *</label>
-                <div className="relative group">
-                  <input 
-                    type="email" 
-                    className="w-full bg-surface-container-low border-none rounded-xl px-4 py-4 text-sm text-on-surface focus:ring-2 focus:ring-primary/40 transition-all"
-                    defaultValue="admin@ordershield.com.bd"
-                  />
-                  <Mail className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant/30 group-focus-within:text-primary transition-colors" size={18} />
-                </div>
+              <div>
+                <label className="text-xs text-gray-700 block mb-1">Email *</label>
+                <input 
+                  type="email" 
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#7c3aed] focus:border-[#7c3aed]"
+                  defaultValue="demo@gmail.com"
+                />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant block ml-1">Phone Number *</label>
-                <div className="relative group">
-                  <input 
-                    type="tel" 
-                    className="w-full bg-surface-container-low border-none rounded-xl px-4 py-4 text-sm text-on-surface focus:ring-2 focus:ring-primary/40 transition-all font-mono"
-                    defaultValue="+880 1727-663254"
-                  />
-                  <Phone className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant/30 group-focus-within:text-primary transition-colors" size={18} />
-                </div>
+              <div>
+                <label className="text-xs text-gray-700 block mb-1">Phone Number *</label>
+                <input 
+                  type="tel" 
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#7c3aed] focus:border-[#7c3aed]"
+                  defaultValue="01727663254"
+                />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant block ml-1">Company Name</label>
-                <div className="relative group">
-                  <input 
-                    type="text" 
-                    className="w-full bg-surface-container-low border-none rounded-xl px-4 py-4 text-sm text-on-surface focus:ring-2 focus:ring-primary/40 transition-all"
-                    defaultValue="OrderShield Logistics Group"
-                  />
-                  <Building className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant/30 group-focus-within:text-primary transition-colors" size={18} />
-                </div>
+              <div>
+                <label className="text-xs text-gray-700 block mb-1">Company Name</label>
+                <input 
+                  type="text" 
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#7c3aed] focus:border-[#7c3aed]"
+                  defaultValue="OrderShield"
+                />
               </div>
 
-              <div className="pt-4">
+              <div>
                 <button 
                   type="button" 
-                  className="w-full bg-primary hover:bg-primary/90 text-on-primary px-8 py-4 rounded-xl text-sm font-bold transition-all shadow-lg shadow-primary/20 active:scale-[0.98] uppercase tracking-widest flex items-center justify-center gap-2"
+                  className="bg-[#7c3aed] hover:bg-[#6d28d9] text-white px-6 py-2 rounded text-sm font-medium transition-colors shadow-sm"
                 >
-                  <Save size={18} />
-                  Save Changes
+                  Submit
                 </button>
               </div>
             </form>
@@ -99,68 +79,58 @@ export const Profile: React.FC = () => {
         </section>
 
         {/* Change Password */}
-        <section className="bg-surface-container rounded-2xl overflow-hidden border border-outline-variant/10 shadow-sm h-fit">
-          <div className="bg-surface-container-high/50 px-8 py-5 border-b border-outline-variant/10 flex items-center gap-3">
-            <Lock className="text-secondary" size={20} />
-            <h3 className="text-on-surface font-bold">Change Password</h3>
+        <section className="bg-white rounded border border-gray-200 shadow-sm overflow-hidden h-fit">
+          <div className="bg-gray-50/50 px-6 py-4 border-b border-gray-100">
+            <h3 className="text-gray-700 font-medium text-lg">Change Password</h3>
           </div>
           
-          <div className="p-8">
-            <p className="text-xs text-on-surface-variant/70 italic mb-8 flex items-center gap-2">
-              <div className="w-1 h-1 rounded-full bg-secondary" />
-              Update your password to keep your account safe
-            </p>
-
+          <div className="p-6">
             <form className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant block ml-1">Current Password *</label>
-                <div className="relative group">
+              <div>
+                <label className="text-xs text-gray-700 block mb-1">Current Password *</label>
+                <div className="relative">
                   <input 
                     type="password" 
-                    className="w-full bg-surface-container-low border-none rounded-xl px-4 py-4 text-sm text-on-surface focus:ring-2 focus:ring-secondary/40 transition-all font-mono"
-                    placeholder="••••••••••••"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#7c3aed] focus:border-[#7c3aed]"
                   />
-                  <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant/30 hover:text-secondary transition-colors">
-                    <Eye size={18} />
+                  <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                    <Eye size={16} />
                   </button>
                 </div>
               </div>
               
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant block ml-1">New Password *</label>
-                <div className="relative group">
+              <div>
+                <label className="text-xs text-gray-700 block mb-1">New Password *</label>
+                <div className="relative">
                   <input 
                     type="password" 
-                    className="w-full bg-surface-container-low border-none rounded-xl px-4 py-4 text-sm text-on-surface focus:ring-2 focus:ring-secondary/40 transition-all font-mono"
-                    placeholder="••••••••••••"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#7c3aed] focus:border-[#7c3aed]"
                   />
-                  <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant/30 hover:text-secondary transition-colors">
-                    <Eye size={18} />
+                  <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                    <Eye size={16} />
                   </button>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant block ml-1">Confirm New Password *</label>
-                <div className="relative group">
+              <div>
+                <label className="text-xs text-gray-700 block mb-1">Confirm Password *</label>
+                <div className="relative">
                   <input 
                     type="password" 
-                    className="w-full bg-surface-container-low border-none rounded-xl px-4 py-4 text-sm text-on-surface focus:ring-2 focus:ring-secondary/40 transition-all font-mono"
-                    placeholder="••••••••••••"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#7c3aed] focus:border-[#7c3aed]"
                   />
-                  <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant/30 hover:text-secondary transition-colors">
-                    <Eye size={18} />
+                  <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                    <Eye size={16} />
                   </button>
                 </div>
               </div>
 
-              <div className="pt-4">
+              <div>
                 <button 
                   type="button" 
-                  className="w-full bg-secondary hover:bg-secondary/90 text-on-secondary px-8 py-4 rounded-xl text-sm font-bold transition-all shadow-lg shadow-secondary/20 active:scale-[0.98] uppercase tracking-widest flex items-center justify-center gap-2"
+                  className="bg-[#7c3aed] hover:bg-[#6d28d9] text-white px-6 py-2 rounded text-sm font-medium transition-colors shadow-sm"
                 >
-                  <Lock size={18} />
-                  Update Password
+                  Submit
                 </button>
               </div>
             </form>

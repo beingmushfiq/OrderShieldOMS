@@ -11,7 +11,7 @@ interface LoginProps {
 
 export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const { login } = useAuth();
-  const [email, setEmail] = useState('admin@ordershield.com.bd');
+  const [email, setEmail] = useState('admin@gmail.com');
   const [password, setPassword] = useState('12345678');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -185,26 +185,6 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 </>
               )}
             </button>
-
-            {/* Quick Access Section */}
-            <div className="pt-6 border-t border-outline-variant/10">
-              <p className="text-[9px] font-black uppercase tracking-[0.3em] text-on-surface-variant text-center mb-4 opacity-50">Quick Authorization</p>
-              <button
-                type="button"
-                onClick={() => {
-                  setEmail('admin@gmail.com');
-                  setPassword('12345678');
-                  setTimeout(() => {
-                    const form = document.querySelector('form');
-                    form?.requestSubmit();
-                  }, 100);
-                }}
-                className="w-full py-4 rounded-xl bg-surface-container-high/30 border border-outline-variant/10 text-on-surface-variant hover:text-primary hover:bg-primary/5 hover:border-primary/20 transition-all flex items-center justify-center gap-3 group"
-              >
-                <ShieldCheck size={16} className="group-hover:scale-110 transition-transform" />
-                <span className="text-[10px] font-black uppercase tracking-widest">Admin Quick Access</span>
-              </button>
-            </div>
           </form>
 
           {/* Compliance Footnote */}
