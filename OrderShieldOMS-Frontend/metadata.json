@@ -1,0 +1,5 @@
+{
+  "name": "OrderShield OMS",
+  "description": "Multi-tenant, fraud-aware Order Management System with real-time detection, courier tracking, and invoice management.",
+  "requestFramePermissions": []
+}
