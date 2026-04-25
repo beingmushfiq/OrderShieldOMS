@@ -14,13 +14,16 @@ import {
   CreditCard,
   MapPin,
   Smartphone,
+  Mail,
   Box
 } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import { toast } from 'sonner';
+import api from '@/src/lib/api';
+
 
 interface OrderItem {
-  id: string;
+  id: number | string;
   name: string;
   price: number;
   quantity: number;
@@ -28,12 +31,10 @@ interface OrderItem {
   sku: string;
 }
 
-const productCatalog: OrderItem[] = [
-  { id: 'p1', name: 'Tin Goyenda Collector Set', price: 1299, quantity: 1, weight: 0.45, sku: 'B-SENT-8821' },
-  { id: 'p2', name: 'Shawshank Redemption (Hardcover)', price: 447, quantity: 1, weight: 0.12, sku: 'B-SENT-0044' },
-  { id: 'p3', name: 'Harry Potter Special Edition', price: 1390, quantity: 1, weight: 0.68, sku: 'B-SENT-1190' },
-  { id: 'p4', name: 'The Witcher: The Last Wish', price: 599, quantity: 1, weight: 0.01, sku: 'B-SENT-5501' },
-];
+
+// Initial empty catalog, will be populated from API
+const initialProductCatalog: OrderItem[] = [];
+
 
 export const CreateOrder: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -49,47 +50,76 @@ export const CreateOrder: React.FC = () => {
     address: '',
     email: ''
   });
+  const [productCatalog, setProductCatalog] = useState<OrderItem[]>([]);
+  const [placedOrderId, setPlacedOrderId] = useState<string>('');
+
+  // Fetch products on mount
+  React.useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await api.get('/products');
+        setProductCatalog(response.data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        toast.error('Failed to load product catalog');
+      }
+    };
+    fetchProducts();
+  }, []);
+
 
   const subtotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const totalWeight = items.reduce((acc, item) => acc + item.weight * item.quantity, 0);
 
-  const updateQuantity = (id: string, delta: number) => {
+  const updateQuantity = (id: number | string, delta: number) => {
     setItems(prev => prev.map(item => 
       item.id === id ? { ...item, quantity: Math.max(1, item.quantity + delta) } : item
     ));
   };
 
-  const removeItem = (id: string) => {
+  const removeItem = (id: number | string) => {
     setItems(prev => prev.filter(item => item.id !== id));
   };
 
+
   const addProduct = (product: OrderItem) => {
-    const existing = items.find(i => i.sku === product.sku);
+    const existing = items.find(i => i.id === product.id);
     if (existing) {
       updateQuantity(existing.id, 1);
     } else {
-      setItems(prev => [...prev, { ...product, id: Date.now().toString(), quantity: 1 }]);
+      setItems(prev => [...prev, { ...product, quantity: 1 }]);
     }
+
     setShowAddItem(false);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (items.length === 0) return toast.error('Please add at least one item');
-    if (!customerInfo.name || !customerInfo.phone) return toast.error('Please fill all customer fields');
+    if (!customerInfo.name || !customerInfo.phone || !customerInfo.address) return toast.error('Please fill all customer fields');
     
     setIsSubmitting(true);
-    toast.promise(
-      new Promise((resolve) => setTimeout(resolve, 2000)),
-      {
-        loading: 'Placing order...',
-        success: () => {
-          setIsSubmitting(false);
-          setIsSuccess(true);
-          return 'Order placed successfully';
-        },
-        error: 'Something went wrong. Please try again.',
-      }
-    );
+    try {
+      const response = await api.post('/orders', {
+        customer_name: customerInfo.name,
+        customer_email: customerInfo.email,
+        customer_phone: customerInfo.phone,
+        customer_address: customerInfo.address,
+
+        items: items.map(item => ({
+          id: item.id,
+          quantity: item.quantity
+        }))
+      });
+
+      setPlacedOrderId(response.data.order_id);
+      setIsSuccess(true);
+      toast.success('Order placed successfully');
+    } catch (error) {
+      console.error('Order placement error:', error);
+      toast.error('Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const fraudScore = 12; // Mock score for this demo
@@ -106,7 +136,7 @@ export const CreateOrder: React.FC = () => {
             <ShieldCheck className="text-secondary" size={40} />
           </div>
           <h2 className="text-3xl font-bold mb-2">Order Placed</h2>
-          <p className="text-on-surface-variant mb-8">Order #ORD-88220 has been processed successfully.</p>
+          <p className="text-on-surface-variant mb-8">Order #{placedOrderId} has been processed successfully.</p>
           <button 
             onClick={() => window.location.href = '/orders'}
             className="w-full py-4 bg-primary text-on-primary rounded-xl font-bold uppercase tracking-widest shadow-lg shadow-primary/20"
@@ -197,6 +227,19 @@ export const CreateOrder: React.FC = () => {
                     onChange={e => setCustomerInfo({...customerInfo, phone: e.target.value})}
                   />
                 </div>
+                <div className="md:col-span-2 space-y-2">
+                  <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant px-1 flex items-center gap-2">
+                    <Mail size={12} /> Email Address
+                  </label>
+                  <input 
+                    type="email"
+                    className="w-full bg-surface-container-low border border-outline-variant/10 rounded-xl px-4 py-3.5 text-on-surface focus:ring-2 focus:ring-primary/40 transition-all" 
+                    placeholder="customer@example.com" 
+                    value={customerInfo.email}
+                    onChange={e => setCustomerInfo({...customerInfo, email: e.target.value})}
+                  />
+                </div>
+
                 <div className="md:col-span-2 space-y-2">
                   <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant px-1 flex items-center gap-2">
                     <MapPin size={12} /> Shipping Address
