@@ -8,6 +8,7 @@ interface AuthContextType {
   user: AuthUser | null;
   login: (credentials: { email: string; password: string; rememberMe?: boolean }) => Promise<void>;
   logout: () => Promise<void>;
+  updateUser: (data: Partial<AuthUser>) => void;
   isLoading: boolean;
 }
 
@@ -29,7 +30,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             name:   response.data.name,
             email:  response.data.email,
             role:   response.data.role || 'admin',
-            avatar: `https://i.pravatar.cc/150?u=${response.data.id}`,
+            phone:  response.data.phone,
+            company: response.data.company,
+            avatar: 'https://api.dicebear.com/7.x/initials/svg?seed=Admin&backgroundColor=7c3aed&fontFamily=Arial&fontSize=40',
           });
           
           if (response.data.theme) {
@@ -60,14 +63,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       name:   apiUser.name,
       email:  apiUser.email,
       role:   apiUser.role ?? 'admin',
-      avatar: apiUser.avatar,
+      phone:  apiUser.phone,
+      company: apiUser.company,
+      avatar: 'https://api.dicebear.com/7.x/initials/svg?seed=Admin&backgroundColor=7c3aed&fontFamily=Arial&fontSize=40',
     });
 
     if (apiUser.theme) {
       setTheme(apiUser.theme, false);
     }
 
-    toast.success('Security authorization successful');
+    toast.success('Logged in successfully');
   };
 
   const logout = async () => {
@@ -78,12 +83,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } finally {
       localStorage.removeItem('token');
       setUser(null);
-      toast.info('Secure session terminated');
+      toast.info('Logged out successfully');
     }
   };
 
+  const updateUser = (data: Partial<AuthUser>) => {
+    setUser(prev => prev ? { ...prev, ...data } : null);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUser, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

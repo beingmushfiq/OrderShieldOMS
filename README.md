@@ -26,8 +26,12 @@ The UI is meticulously crafted with **Tailwind CSS 4** and **Framer Motion**, de
 - **🔒 Secure Authentication:** Stateless Bearer token architecture via Laravel Sanctum.
 - **📊 Live Analytics Dashboard:** Dynamic sales charting powered by Recharts.
 - **🛍️ Catalog & Inventory:** Full product and category management.
+- **🛡️ Fraud Intelligence:** Multi-stage risk analysis simulation with reactive scoring and "Analyzing" states.
+- **🌓 Adaptive Theming:** System-wide Light/Dark mode toggling with persistent state management.
+- **👤 Account Center:** Comprehensive administrative profile, company metadata, and password management.
 - **📦 Order Processing:** Deep relational matrix handling complex orders, items, and customers.
 - **📱 Responsive Design:** Desktop-first but entirely mobile-friendly administrative layout.
+- **🚚 Shipment Tracking:** Integrated logistics visualization and courier API foundation.
 - **⚡ Lightning Fast:** Vite-powered React 19 frontend guarantees immediate HMR and instant page transitions.
 
 ---

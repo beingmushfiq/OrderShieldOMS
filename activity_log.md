@@ -187,7 +187,7 @@ This document provides a detailed, day-by-day account of the crucial 7-day sprin
 
 - `OrderShieldOMS-Backend/database/seeders/DatabaseSeeder.php` (Modified)
 - `OrderShieldOMS-Frontend/src/pages/Tracking.tsx` (Created)
-- `OrderShieldOMS-Frontend/src/pages/Invoices.tsx` (Created)
+- `OrderShieldOMS-Frontend/src/pages/Invoices.tsx" (Created)
 - `OrderShieldOMS-Backend/.env` (DB Config Update)
 
 ---
@@ -221,7 +221,56 @@ This document provides a detailed, day-by-day account of the crucial 7-day sprin
 
 ---
 
-### **Total Phase Time: 54 Hours**
+### Day 9: Administrative Identity & Account Security
+
+**Focus:** Expanding user metadata and implementing secure profile management.
+**Hours Logged:** 6 Hours
+
+**Detailed Activities:**
+
+1. **User Identity Expansion:** Added `phone` and `company` fields to the `users` table via Laravel migrations and updated the model for mass assignment.
+2. **Account Center Overhaul:** Redesigned the Profile page into a high-performance profile hub with real-time API synchronization.
+3. **Global State Reactivity:** Enhanced `AuthContext` with an `updateUser` function to ensure profile changes are reflected globally without page reloads.
+
+**Commands Given:**
+
+- `php artisan make:migration add_phone_and_company_to_users_table`
+- `php artisan migrate`
+
+**Files Created/Modified:**
+
+- `OrderShieldOMS-Backend/database/migrations/2026_05_02_204234_add_phone_and_company_to_users_table.php`
+- `OrderShieldOMS-Backend/app/Models/User.php`
+- `OrderShieldOMS-Frontend/src/pages/Profile.tsx`
+- `OrderShieldOMS-Frontend/src/context/AuthContext.tsx`
+
+---
+
+### Day 10: Fraud Intelligence & Data Integrity
+
+**Focus:** Enhancing order logic with real-time risk simulation and resolving system-wide serialization issues.
+**Hours Logged:** 6 Hours
+
+**Detailed Activities:**
+
+1. **Dynamic Fraud Intelligence:** Integrated a multi-stage fraud analysis simulation in the Order Creation workflow, featuring an "Analyzing" state and random risk scoring.
+2. **Data Integrity Fixes:** Resolved critical `TypeError: items.map is not a function` by enforcing sequential array serialization in the Laravel `OrderController`.
+3. **Aesthetic Standardization:** Standardized administrative avatars to a professional "Admin" design and purged technical jargon across the core modules.
+
+**Commands Given:**
+
+- `php artisan make:controller Api/OrderController` (Update logic)
+
+**Files Created/Modified:**
+
+- `OrderShieldOMS-Frontend/src/pages/CreateOrder.tsx`
+- `OrderShieldOMS-Backend/app/Http/Controllers/Api/OrderController.php`
+- `OrderShieldOMS-Backend/app/Http/Controllers/Api/AuthController.php`
+- `OrderShieldOMS-Frontend/src/types.ts`
+
+---
+
+### **Total Phase Time: 66 Hours**
 
 **Professor's Review Note / Conclusion:**
 This integration and polishing phase successfully bridged the gap between a static frontend prototype and a fully functional, data-driven application. By resolving complex authentication mismatches, implementing a dynamic theme architecture, and ensuring strict visual accessibility, the OrderShield platform now exhibits the robust architecture and premium user experience expected of a high-level academic engineering project.

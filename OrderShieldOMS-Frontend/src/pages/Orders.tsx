@@ -11,7 +11,9 @@ import {
   User,
   CreditCard,
   Calendar,
-  Loader2
+  Loader2,
+  Box,
+  Trash2
 } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import { Order } from '@/src/types';
@@ -30,17 +32,34 @@ export const Orders: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({
+    status: '',
+    customer: '',
+    phone: '',
+    amount: 0
+  });
+  const [couriers, setCouriers] = useState<any[]>([]);
+  const [selectedCourierId, setSelectedCourierId] = useState<string>('');
 
   // Fetch from the real Laravel API on mount
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         setIsLoading(true);
-        const response = await api.get('/orders');
-        setOrders(response.data);
+        const [ordersRes, couriersRes] = await Promise.all([
+          api.get('/orders'),
+          api.get('/couriers')
+        ]);
+        setOrders(ordersRes.data);
+        const activeCouriers = couriersRes.data.filter((c: any) => c.is_active);
+        setCouriers(activeCouriers);
+        if (activeCouriers.length > 0) {
+          setSelectedCourierId(activeCouriers[0].id.toString());
+        }
       } catch (err: any) {
-        toast.error('Failed to load orders from the database.');
-        console.error('Orders fetch error:', err);
+        toast.error('Failed to load system data.');
+        console.error('Fetch error:', err);
       } finally {
         setIsLoading(false);
       }
@@ -48,13 +67,82 @@ export const Orders: React.FC = () => {
     fetchOrders();
   }, []);
 
+  const handleStatusUpdate = async (orderId: string, newStatus: string) => {
+    try {
+      const payload: any = { status: newStatus };
+      if (newStatus === 'shipped' && selectedCourierId) {
+        payload.courier_id = selectedCourierId;
+      }
+      
+      await api.put(`/orders/${orderId}`, payload);
+      setOrders(orders.map(o => o.id === orderId ? { ...o, status: newStatus as any } : o));
+      if (selectedOrder?.id === orderId) {
+        setSelectedOrder({ ...selectedOrder, status: newStatus as any });
+      }
+      toast.success(`Order marked as ${newStatus}`);
+    } catch (err) {
+      console.error('Status update error:', err);
+      toast.error('Failed to update order status.');
+    }
+  };
+
+  const handleOrderUpdate = async () => {
+    if (!selectedOrder) return;
+    
+    try {
+      await api.put(`/orders/${selectedOrder.id}`, {
+        status: editForm.status,
+        customer_name: editForm.customer,
+        customer_phone: editForm.phone,
+        total_amount: editForm.amount
+      });
+      
+      toast.success('Order updated successfully');
+      setIsEditing(false);
+      
+      const updatedOrders = orders.map(o => 
+        o.id === selectedOrder.id 
+          ? { 
+              ...o, 
+              status: editForm.status,
+              customer: editForm.customer,
+              phone: editForm.phone,
+              amount: Number(editForm.amount)
+            } 
+          : o
+      );
+      setOrders(updatedOrders);
+      setSelectedOrder({
+        ...selectedOrder,
+        status: editForm.status,
+        customer: editForm.customer,
+        phone: editForm.phone,
+        amount: Number(editForm.amount)
+      });
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || 'Failed to update order');
+    }
+  };
+
+  const startEditing = () => {
+    if (!selectedOrder) return;
+    setEditForm({
+      status: selectedOrder.status,
+      customer: selectedOrder.customer,
+      phone: selectedOrder.phone,
+      amount: selectedOrder.amount
+    });
+    setIsEditing(true);
+  };
+
   const filteredOrders = orders.filter((order) => {
     const matchesFilter = activeFilter === 'All' || 
       (activeFilter === 'Pending' && order.status === 'processing') ||
       (activeFilter === 'Completed' && order.status === 'completed') ||
       (activeFilter === 'Flagged' && (order.status === 'flagged' || order.fraudScore >= 70));
-    const matchesSearch = order.id.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          order.customer.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = (order.id || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          (order.customer || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          (order.phone || '').toLowerCase().includes(searchQuery.toLowerCase());
     return matchesFilter && matchesSearch;
   });
 
@@ -145,7 +233,7 @@ export const Orders: React.FC = () => {
                   <td className="px-6 py-6">
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-[10px] font-black border border-outline-variant/10">
-                        {order.customer.split(' ').map(n => n[0]).join('')}
+                        {(order.customer || 'Unknown').split(' ').map(n => n[0]).join('')}
                       </div>
                       <div>
                         <p className="text-sm font-bold">{order.customer}</p>
@@ -239,12 +327,20 @@ export const Orders: React.FC = () => {
                   </div>
                   <h2 className="font-black text-lg tracking-tight uppercase">Order Details</h2>
                 </div>
-                <button 
-                  onClick={() => setSelectedOrder(null)}
-                  className="p-2 hover:bg-surface-container-high rounded-full transition-colors"
-                >
-                  <X size={20} />
-                </button>
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={() => isEditing ? handleOrderUpdate() : startEditing()}
+                    className="px-4 py-2 bg-primary/10 text-primary rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all"
+                  >
+                    {isEditing ? 'Save' : 'Edit'}
+                  </button>
+                  <button 
+                    onClick={() => { setSelectedOrder(null); setIsEditing(false); }}
+                    className="p-2 hover:bg-surface-container-high rounded-full transition-colors"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
               </div>
               
               <div className="flex-1 overflow-y-auto p-8 space-y-10">
@@ -261,6 +357,54 @@ export const Orders: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 gap-6">
+                {isEditing ? (
+                  <div className="space-y-6 pt-4">
+                    <div>
+                      <label className="text-[10px] font-black uppercase text-on-surface-variant mb-2 block tracking-widest">Customer Name</label>
+                      <input 
+                        type="text"
+                        value={editForm.customer}
+                        onChange={(e) => setEditForm({ ...editForm, customer: e.target.value })}
+                        className="w-full bg-surface-container border border-outline-variant/20 rounded-2xl p-4 text-sm font-bold outline-none focus:ring-2 focus:ring-primary/40"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-black uppercase text-on-surface-variant mb-2 block tracking-widest">Phone Number</label>
+                      <input 
+                        type="text"
+                        value={editForm.phone}
+                        onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                        className="w-full bg-surface-container border border-outline-variant/20 rounded-2xl p-4 text-sm font-bold outline-none focus:ring-2 focus:ring-primary/40"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-[10px] font-black uppercase text-on-surface-variant mb-2 block tracking-widest">Status</label>
+                        <select 
+                          value={editForm.status}
+                          onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
+                          className="w-full bg-surface-container border border-outline-variant/20 rounded-2xl p-4 text-sm font-bold outline-none focus:ring-2 focus:ring-primary/40 appearance-none"
+                        >
+                          <option value="processing">Processing</option>
+                          <option value="shipped">Shipped</option>
+                          <option value="completed">Completed</option>
+                          <option value="flagged">Flagged</option>
+                          <option value="cancelled">Cancelled</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-black uppercase text-on-surface-variant mb-2 block tracking-widest">Amount (৳)</label>
+                        <input 
+                          type="number"
+                          value={editForm.amount}
+                          onChange={(e) => setEditForm({ ...editForm, amount: Number(e.target.value) })}
+                          className="w-full bg-surface-container border border-outline-variant/20 rounded-2xl p-4 text-sm font-bold outline-none focus:ring-2 focus:ring-primary/40"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <>
                   <div className="bg-surface-container p-6 rounded-3xl border border-outline-variant/10">
                     <div className="flex justify-between items-center mb-6">
                       <p className="text-[10px] uppercase text-on-surface-variant font-black tracking-widest">Fraud Check</p>
@@ -307,6 +451,32 @@ export const Orders: React.FC = () => {
                       <p className="text-[10px] text-on-surface-variant font-bold mt-1">Paid via Gateway</p>
                     </div>
                   </div>
+                  </>
+                )}
+                </div>
+                
+                <div className="space-y-6">
+                  <p className="text-[10px] uppercase tracking-[0.2em] font-black text-on-surface-variant">Order Items</p>
+                  <div className="space-y-3">
+                    {Array.isArray(selectedOrder.items) ? selectedOrder.items.map((item, idx) => (
+                      <div key={idx} className="flex items-center justify-between p-4 bg-surface-container rounded-2xl border border-outline-variant/10">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center text-primary">
+                            <Box size={14} />
+                          </div>
+                          <div>
+                            <p className="text-xs font-bold">{item.name}</p>
+                            <p className="text-[9px] text-on-surface-variant font-bold uppercase tracking-tighter">Qty: {item.quantity} • {item.weight}kg</p>
+                          </div>
+                        </div>
+                        <p className="text-xs font-black text-primary">৳ {(item.price * item.quantity).toLocaleString()}</p>
+                      </div>
+                    )) : (
+                      <div className="p-4 text-center text-[10px] text-on-surface-variant italic bg-surface-container/50 rounded-2xl border border-dashed border-outline-variant/10">
+                        No items found in this order
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div className="space-y-6">
@@ -339,9 +509,38 @@ export const Orders: React.FC = () => {
               </div>
 
               {isManager && (
-                <div className="p-8 bg-surface-container mt-auto border-t border-outline-variant/10 grid grid-cols-2 gap-4">
-                  <button className="py-4 bg-surface-container-high rounded-2xl text-[10px] font-black uppercase tracking-widest text-primary hover:bg-surface-container-highest transition-all border border-primary/10">Flag Order</button>
-                  <button className="py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">Ship Order</button>
+                <div className="p-8 bg-surface-container mt-auto border-t border-outline-variant/10 space-y-4">
+                  {selectedOrder.status !== 'shipped' && selectedOrder.status !== 'completed' && couriers.length > 0 && (
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-on-surface-variant tracking-widest ml-1">Assign Courier</label>
+                      <select 
+                        value={selectedCourierId}
+                        onChange={(e) => setSelectedCourierId(e.target.value)}
+                        className="w-full bg-surface-container-low border border-outline-variant/10 rounded-xl px-4 py-3 text-xs font-bold text-on-surface outline-none focus:ring-2 focus:ring-primary/40 appearance-none"
+                      >
+                        {couriers.map(c => (
+                          <option key={c.id} value={c.id}>{c.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <button 
+                      onClick={() => handleStatusUpdate(selectedOrder.id, 'flagged')}
+                      disabled={selectedOrder.status === 'flagged'}
+                      className="py-4 bg-surface-container-high rounded-2xl text-[10px] font-black uppercase tracking-widest text-primary hover:bg-surface-container-highest transition-all border border-primary/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Flag Order
+                    </button>
+                    <button 
+                      onClick={() => handleStatusUpdate(selectedOrder.id, 'shipped')}
+                      disabled={selectedOrder.status === 'shipped'}
+                      className="py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Ship Order
+                    </button>
+                  </div>
                 </div>
               )}
             </motion.div>

@@ -34,7 +34,7 @@ export interface Invoice {
   customer: string;
   email: string;
   amount: number;
-  tax: number;
+  shippingCharge: number;
   total: number;
   status: 'paid' | 'pending' | 'overdue';
   issuedDate: string;
@@ -54,6 +54,22 @@ export interface AuthUser {
   email: string;
   role: 'admin' | 'manager' | 'analyst';
   avatar: string;
+  phone?: string;
+  company?: string;
+}
+
+export interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  location: string;
+  tier: string;
+  fraudRiskScore: number;
+  lifetimeValue: number;
+  totalOrders: number;
+  memberSince: string;
+  orders?: any[]; // For detailed view
 }
 
 export interface Category {

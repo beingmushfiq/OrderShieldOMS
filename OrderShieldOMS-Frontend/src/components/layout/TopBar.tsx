@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronRight, Bell, Shield, User } from 'lucide-react';
 import { Page } from '@/src/types';
 import { useAuth } from '@/src/context/AuthContext';
 import ThemeToggle from './ThemeToggle';
+import api from '@/src/lib/api';
+import { cn } from '@/src/lib/utils';
 
 interface TopBarProps {
   currentPage: Page;
@@ -12,6 +14,23 @@ interface TopBarProps {
 
 export const TopBar: React.FC<TopBarProps> = ({ currentPage, title, onPageChange }) => {
   const { user } = useAuth();
+  const [alertCount, setAlertCount] = useState(0);
+
+  useEffect(() => {
+    const fetchAlertCount = async () => {
+      try {
+        const response = await api.get('/alerts');
+        setAlertCount(response.data.length);
+      } catch (err) {
+        console.error('Failed to fetch alert count');
+      }
+    };
+
+    fetchAlertCount();
+    // Poll every 30 seconds for new alerts
+    const interval = setInterval(fetchAlertCount, 30000);
+    return () => clearInterval(interval);
+  }, []);
   
   return (
     <header className="w-full sticky top-0 z-50 flex justify-between items-center px-6 py-4 bg-background/80 backdrop-blur-md border-b border-outline-variant/10">
@@ -31,13 +50,26 @@ export const TopBar: React.FC<TopBarProps> = ({ currentPage, title, onPageChange
           onClick={() => onPageChange('alerts')}
           className="relative p-2 rounded-full hover:bg-surface-container-high transition-colors text-on-surface-variant group active:scale-95 transition-all"
         >
-          <Bell size={20} className="group-hover:text-primary transition-colors" />
-          <span className="absolute top-1 right-1 w-2 h-2 bg-error rounded-full shadow-[0_0_4px_rgba(255,180,171,0.6)]" />
+          <Bell size={20} className={cn(
+            "group-hover:text-primary transition-colors",
+            alertCount > 0 && "text-error animate-pulse"
+          )} />
+          {alertCount > 0 && (
+            <span className="absolute top-1.5 right-1.5 flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-error shadow-[0_0_8px_rgba(255,68,68,0.6)]"></span>
+            </span>
+          )}
         </button>
         
         <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container-high/50">
-          <Shield size={14} className="text-secondary" />
-          <span className="text-[10px] font-bold uppercase tracking-widest text-secondary">Protected</span>
+          <Shield size={14} className={cn(alertCount > 0 ? "text-error" : "text-secondary")} />
+          <span className={cn(
+            "text-[10px] font-bold uppercase tracking-widest",
+            alertCount > 0 ? "text-error" : "text-secondary"
+          )}>
+            {alertCount > 0 ? 'Threat Detected' : 'Protected'}
+          </span>
         </div>
 
         <button 

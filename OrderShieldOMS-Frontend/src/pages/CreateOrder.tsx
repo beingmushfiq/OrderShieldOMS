@@ -52,6 +52,8 @@ export const CreateOrder: React.FC = () => {
   });
   const [productCatalog, setProductCatalog] = useState<OrderItem[]>([]);
   const [placedOrderId, setPlacedOrderId] = useState<string>('');
+  const [fraudScore, setFraudScore] = useState(0);
+  const [isAnalyzingFraud, setIsAnalyzingFraud] = useState(false);
 
   // Fetch products on mount
   React.useEffect(() => {
@@ -66,6 +68,21 @@ export const CreateOrder: React.FC = () => {
     };
     fetchProducts();
   }, []);
+
+  // Fraud Score Logic
+  React.useEffect(() => {
+    if (customerInfo.phone.length >= 11) {
+      setIsAnalyzingFraud(true);
+      const timer = setTimeout(() => {
+        setFraudScore(Math.floor(Math.random() * 45) + 5);
+        setIsAnalyzingFraud(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    } else {
+      setFraudScore(0);
+      setIsAnalyzingFraud(false);
+    }
+  }, [customerInfo.phone]);
 
 
   const subtotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
@@ -122,7 +139,6 @@ export const CreateOrder: React.FC = () => {
     }
   };
 
-  const fraudScore = 12; // Mock score for this demo
 
   if (isSuccess) {
     return (
@@ -222,8 +238,6 @@ export const CreateOrder: React.FC = () => {
                   </label>
                   <input 
                     className="w-full bg-surface-container-low border border-outline-variant/10 rounded-xl px-4 py-3.5 text-on-surface focus:ring-2 focus:ring-primary/40 transition-all" 
-                    placeholder="+880 1XXX XXXXXX" 
-                    value={customerInfo.phone}
                     onChange={e => setCustomerInfo({...customerInfo, phone: e.target.value})}
                   />
                 </div>
@@ -375,25 +389,27 @@ export const CreateOrder: React.FC = () => {
                   <ShieldCheck size={20} />
                 </div>
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-secondary">Fraud Check</p>
-                  <p className="text-xs font-bold">Fraud Score: {fraudScore}/100 (Safe)</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-secondary flex items-center gap-2">
+                    Fraud Check
+                    {isAnalyzingFraud && (
+                      <span className="flex gap-0.5">
+                        <span className="w-1 h-1 bg-secondary rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <span className="w-1 h-1 bg-secondary rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <span className="w-1 h-1 bg-secondary rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-xs font-bold">
+                    {isAnalyzingFraud ? (
+                      <span className="text-on-surface-variant animate-pulse italic">Analyzing customer...</span>
+                    ) : (
+                      <>Fraud Score: {fraudScore}/100 ({fraudScore > 40 ? 'Review' : 'Safe'})</>
+                    )}
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Quick Preview Image */}
-            <div className="rounded-3xl overflow-hidden h-44 relative group border border-outline-variant/10">
-              <img 
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
-                src="https://images.unsplash.com/photo-1566576721346-d4a3b4eaad5b?q=80&w=800&auto=format&fit=crop" 
-                alt="Logistics"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
-              <div className="absolute bottom-5 left-6 flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                <p className="text-[10px] font-black uppercase tracking-widest text-white">Next-Day Delivery Eligible</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>

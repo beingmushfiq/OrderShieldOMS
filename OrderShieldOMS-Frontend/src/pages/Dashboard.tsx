@@ -111,9 +111,9 @@ export const Dashboard: React.FC<{ onPageChange: (page: Page) => void }> = ({ on
           </div>
         </div>
         <div className="space-y-3">
-          {orders.slice(0, 5).map((order, i) => (
+          {(orders || []).slice(0, 5).map((order, i) => (
             <motion.div
-              key={order.id}
+              key={order.id || i}
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.06 }}
@@ -122,15 +122,15 @@ export const Dashboard: React.FC<{ onPageChange: (page: Page) => void }> = ({ on
               <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                 <ShoppingCart size={16} />
               </div>
-              <p className="flex-1 text-sm font-bold text-on-surface">{order.id}</p>
-              <p className="text-sm text-on-surface-variant">{order.customer}</p>
+              <p className="flex-1 text-sm font-bold text-on-surface">{order.id || 'N/A'}</p>
+              <p className="text-sm text-on-surface-variant">{order.customer || 'Unknown'}</p>
               <p className="text-sm font-bold">{isAdmin || isManager ? `৳${(order.amount || 0).toLocaleString()}` : '৳••••'}</p>
               <div className={cn(
                 "px-2 py-0.5 rounded text-[10px] font-black uppercase",
-                order.status === 'completed' ? 'bg-secondary/10 text-secondary' :
-                order.status === 'flagged' ? 'bg-error/10 text-error' :
+                (order.status || 'processing') === 'completed' ? 'bg-secondary/10 text-secondary' :
+                (order.status || 'processing') === 'flagged' ? 'bg-error/10 text-error' :
                 'bg-primary/10 text-primary'
-              )}>{order.status}</div>
+              )}>{order.status || 'processing'}</div>
             </motion.div>
           ))}
           {orders.length === 0 && !stats && (

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import api from '@/src/lib/api';
 import { 
   Check, 
   Truck, 
@@ -24,10 +25,28 @@ interface Shipment {
   lastUpdate: string;
 }
 
-const shipments: Shipment[] = [];
-
 export const Tracking: React.FC = () => {
-  const [selectedShipment, setSelectedShipment] = useState<Shipment | null>(shipments[0] || null);
+  const [shipments, setShipments] = useState<Shipment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedShipment, setSelectedShipment] = useState<Shipment | null>(null);
+
+  React.useEffect(() => {
+    const fetchShipments = async () => {
+      try {
+        setIsLoading(true);
+        const response = await api.get('/shipments');
+        setShipments(response.data);
+        if (response.data.length > 0) {
+          setSelectedShipment(response.data[0]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch shipments:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchShipments();
+  }, []);
 
   const statusStyle = {
     'delivered': { color: 'text-secondary', bg: 'bg-secondary/10', label: 'Delivered', icon: Check },
@@ -146,6 +165,29 @@ export const Tracking: React.FC = () => {
                       <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">ETA</p>
                       <p className="text-sm font-medium">{selectedShipment.eta}</p>
                     </div>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">Status History</p>
+                  <div className="relative pl-10 space-y-8">
+                    <div className="absolute left-[15px] top-2 bottom-2 w-0.5 bg-outline-variant/10" />
+                    {(selectedShipment as any).history?.map((h: any, idx: number) => (
+                      <div key={idx} className="relative">
+                        <div className={cn(
+                          "absolute -left-[31px] top-1 w-4 h-4 rounded-full ring-4 ring-surface-container-low",
+                          idx === 0 ? "bg-primary shadow-[0_0_15px_rgba(79,70,229,0.4)]" : "bg-outline-variant"
+                        )} />
+                        <p className="text-xs font-bold uppercase">{h.status}</p>
+                        <p className="text-[10px] text-on-surface-variant font-medium mt-1">{h.location} • {h.timestamp}</p>
+                      </div>
+                    ))}
+                    {(!(selectedShipment as any).history || (selectedShipment as any).history.length === 0) && (
+                      <div className="relative italic text-xs text-on-surface-variant">
+                         <div className="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-outline-variant ring-4 ring-surface-container-low" />
+                         Shipment initiated. Waiting for first scan.
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

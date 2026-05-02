@@ -201,3 +201,51 @@
     background: rgba(195, 192, 255, 0.25);
   }
 }
+
+/* Hide print-only elements on screen */
+@media screen {
+  .print-only {
+    display: none !important;
+  }
+}
+
+/* Global Print Styles for Invoices */
+@media print {
+  /* Scorched earth: hide everything */
+  html, body {
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* Whitelist the printable invoice and its children */
+  .print-only,
+  .print-only * {
+    visibility: visible !important;
+  }
+
+  .print-only {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Absolute kill list for display to prevent blank pages/extra pages */
+  .no-print,
+  #sidebar,
+  #topbar,
+  .sonner-toast,
+  [role="status"],
+  button,
+  .AnimatePresence {
+    display: none !important;
+  }
+}

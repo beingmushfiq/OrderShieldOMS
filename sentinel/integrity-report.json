@@ -1,0 +1,19 @@
+{
+  "deadButtons": [
+    {
+      "text": "",
+      "index": 0,
+      "outerHTML": "<button type=\"button\" class=\"absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-eye\" aria-hidden=\"true\"><path d=\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\"></path><circle cx=\"12\" cy=\"12\" r=\"3\"></circle></svg></button>",
+      "error": "page.click: Timeout 1000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button').first()\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" class=\"absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not stable\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not stable\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m    - element is not stable\u001b[22m\n\u001b[2m  - retrying click action\u001b[22m\n\u001b[2m    - waiting 500ms\u001b[22m\n"
+    },
+    {
+      "text": "LOGIN",
+      "index": 2,
+      "outerHTML": "<button type=\"submit\" class=\"w-full py-5 rounded-2xl bg-gradient-to-r from-primary to-primary-container text-on-primary font-black text-xs uppercase tracking-[0.2em] shadow-[0_15px_45px_rgba(79,70,229,0.4)] hover:shadow-[0_20px_60px_rgba(79,70,229,0.5)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all flex items-center justify-center gap-4 disabled:opacity-70 disabled:cursor-not-allowed group\"><span>Login</span><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-right group-hover:translate-x-1 transition-transform\" aria-hidden=\"true\"><path d=\"M5 12h14\"></path><path d=\"m12 5 7 7-7 7\"></path></svg></button>",
+      "error": "page.click: Timeout 1000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button').nth(2)\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"submit\" class=\"w-full py-5 rounded-2xl bg-gradient-to-r from-primary to-primary-container text-on-primary font-black text-xs uppercase tracking-[0.2em] shadow-[0_15px_45px_rgba(79,70,229,0.4)] hover:shadow-[0_20px_60px_rgba(79,70,229,0.5)] hover:-translate-y-0.5 active:translate-y-0.5 transition-all flex items-center justify-center gap-4 disabled:opacity-70 disabled:cursor-not-allowed group\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m    - element is visible, enabled and stable\u001b[22m\n\u001b[2m    - scrolling into view if needed\u001b[22m\n\u001b[2m    - done scrolling\u001b[22m\n\u001b[2m    - performing click action\u001b[22m\n"
+    }
+  ],
+  "brokenLinks": [],
+  "consoleErrors": [],
+  "networkFailures": []
+}

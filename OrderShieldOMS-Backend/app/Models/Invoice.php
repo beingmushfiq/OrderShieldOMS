@@ -14,11 +14,16 @@ class Invoice extends Model
         'invoice_id',
         'order_id',
         'amount',
-        'tax_amount',
+        'shipping_charge',
         'total_amount',
         'status',
         'issued_at',
         'due_at',
+    ];
+
+    protected $casts = [
+        'issued_at' => 'datetime',
+        'due_at'    => 'datetime',
     ];
 
     public function order(): BelongsTo

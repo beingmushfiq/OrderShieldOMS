@@ -42,7 +42,9 @@ class AuthController extends Controller
                 'email' => $user->email,
                 'role' => $user->role,
                 'theme' => $user->theme,
-                'avatar' => 'https://i.pravatar.cc/150?u=' . $user->id
+                'phone' => $user->phone,
+                'company' => $user->company,
+                'avatar' => 'https://api.dicebear.com/7.x/initials/svg?seed=Admin&backgroundColor=7c3aed&fontFamily=Arial&fontSize=40'
             ]
         ]);
     }
@@ -65,6 +67,53 @@ class AuthController extends Controller
         $user->save();
 
         return response()->json(['message' => 'Theme updated successfully', 'theme' => $user->theme]);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:20',
+            'company' => 'nullable|string|max:255',
+        ]);
+
+        $user->update($request->only(['name', 'email', 'phone', 'company']));
+
+        return response()->json([
+            'message' => 'Profile updated successfully',
+            'user' => [
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'company' => $user->company,
+                'role' => $user->role,
+                'avatar' => 'https://api.dicebear.com/7.x/initials/svg?seed=Admin&backgroundColor=7c3aed&fontFamily=Arial&fontSize=40'
+            ]
+        ]);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = $request->user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            throw ValidationException::withMessages([
+                'current_password' => ['The provided password does not match your current password.'],
+            ]);
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return response()->json(['message' => 'Password changed successfully']);
     }
 }
 

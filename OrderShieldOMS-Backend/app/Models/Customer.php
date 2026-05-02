@@ -22,6 +22,10 @@ class Customer extends Model
         'member_since',
     ];
 
+    protected $casts = [
+        'member_since' => 'datetime',
+    ];
+
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);

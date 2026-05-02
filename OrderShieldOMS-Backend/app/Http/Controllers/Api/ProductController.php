@@ -59,4 +59,49 @@ class ProductController extends Controller
 
         return response()->json($product, 201);
     }
+
+    /**
+     * Update an existing product.
+     */
+    public function update(Request $request, int $id): JsonResponse
+    {
+        $product = Product::findOrFail($id);
+
+        $validated = $request->validate([
+            'sku'         => 'nullable|string|unique:products,sku,' . $id,
+            'name'        => 'sometimes|required|string|max:255',
+            'price'       => 'sometimes|required|numeric|min:0',
+            'stock'       => 'sometimes|required|integer|min:0',
+            'weight'      => 'nullable|numeric|min:0',
+            'category_id' => 'sometimes|required|exists:categories,id',
+            'description' => 'nullable|string',
+        ]);
+
+        $updateData = [];
+        if (isset($validated['sku']))         $updateData['sku']         = $validated['sku'];
+        if (isset($validated['name']))        $updateData['name']        = $validated['name'];
+        if (isset($validated['price']))       $updateData['price']       = $validated['price'];
+        if (isset($validated['stock']))       $updateData['stock_count'] = $validated['stock'];
+        if (isset($validated['weight']))      $updateData['weight_kg']   = $validated['weight'];
+        if (isset($validated['category_id'])) {
+            $updateData['category_id'] = $validated['category_id'];
+            $updateData['category']    = Category::find($validated['category_id'])->name;
+        }
+        if (isset($validated['description'])) $updateData['description'] = $validated['description'];
+
+        $product->update($updateData);
+
+        return response()->json($product);
+    }
+
+    /**
+     * Remove a product.
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        $product = Product::findOrFail($id);
+        $product->delete();
+
+        return response()->json(['message' => 'Product deleted successfully']);
+    }
 }
