@@ -107,7 +107,7 @@ export const Settings: React.FC<SettingsProps> = ({ activeTab = 'courier' }) => 
                     <input 
                       type="text" 
                       className="w-full bg-surface-container-low border-none rounded-xl px-4 py-4 text-sm text-on-surface focus:ring-2 focus:ring-primary/40 transition-all"
-                      defaultValue="https://api.ordershield.com.bd/fraud-check"
+                      defaultValue="hhttps://api.bdcourier.com/courier-check"
                     />
                     <Globe className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant/30 group-focus-within:text-primary transition-colors" size={18} />
                   </div>
@@ -218,50 +218,7 @@ export const Settings: React.FC<SettingsProps> = ({ activeTab = 'courier' }) => 
               </form>
             </div>
             
-            <div className="px-8 py-4 bg-surface-container-high/30 border-t border-outline-variant/10">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.25em] text-on-surface-variant">Connected Couriers</h3>
-            </div>
-            <div className="overflow-x-auto p-8 pt-4">
-              <table className="w-full text-left text-sm">
-                <thead>
-                  <tr className="text-on-surface-variant/50 border-b border-outline-variant/10">
-                    <th className="px-4 py-4 font-bold text-[10px] uppercase tracking-widest">ID</th>
-                    <th className="px-4 py-4 font-bold text-[10px] uppercase tracking-widest">Provider</th>
-                    <th className="px-4 py-4 font-bold text-[10px] uppercase tracking-widest">Status</th>
-                    <th className="px-4 py-4 font-bold text-[10px] uppercase tracking-widest">Cash Collection</th>
-                    <th className="px-4 py-4 font-bold text-[10px] uppercase tracking-widest">Balance</th>
-                    <th className="px-4 py-4 font-bold text-[10px] uppercase tracking-widest text-center">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-outline-variant/5">
-                  <tr className="group hover:bg-surface-container-high/40 transition-colors">
-                    <td className="px-4 py-5 text-on-surface-variant font-mono text-xs">#001</td>
-                    <td className="px-4 py-5">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded bg-surface-container-low flex items-center justify-center">
-                          <Truck size={14} className="text-secondary" />
-                        </div>
-                        <span className="font-bold text-on-surface">Steadfast</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-5">
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-secondary/10 text-secondary text-[10px] font-black uppercase tracking-widest">
-                        <div className="w-1.5 h-1.5 rounded-full bg-secondary" />
-                        Connected
-                      </span>
-                    </td>
-                    <td className="px-4 py-5 font-bold text-on-surface">৳150,000</td>
-                    <td className="px-4 py-5 font-black text-secondary">৳45,000</td>
-                    <td className="px-4 py-5">
-                      <div className="flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button className="text-primary hover:scale-110 transition-transform"><Edit2 size={16} /></button>
-                        <button className="text-error hover:scale-110 transition-transform"><Trash2 size={16} /></button>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+
           </section>
         </div>
         )}
@@ -296,34 +253,7 @@ export const Settings: React.FC<SettingsProps> = ({ activeTab = 'courier' }) => 
 
             </div>
 
-            <div className="px-8 py-4 bg-surface-container-high/30 border-t border-outline-variant/10">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.25em] text-on-surface-variant">Active Links</h3>
-            </div>
-            <div className="overflow-x-auto p-8 pt-4">
-              <table className="w-full text-left text-sm">
-                <thead>
-                  <tr className="text-on-surface-variant/50 border-b border-outline-variant/10">
-                    <th className="px-4 py-4 font-bold text-[10px] uppercase tracking-widest">Name</th>
-                    <th className="px-4 py-4 font-bold text-[10px] uppercase tracking-widest">Link</th>
-                    <th className="px-4 py-4 font-bold text-[10px] uppercase tracking-widest">Key</th>
-                    <th className="px-4 py-4 font-bold text-[10px] uppercase tracking-widest text-center">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-outline-variant/5">
-                  <tr className="group hover:bg-surface-container-high/40 transition-colors">
-                    <td className="px-4 py-5 font-bold text-on-surface">steadfast</td>
-                    <td className="px-4 py-5 text-xs text-on-surface-variant font-mono">.../callback/steadfast</td>
-                    <td className="px-4 py-5 text-[10px] font-mono text-tertiary/70 truncate max-w-[200px]">d1FDpWN5R2xx4Lz2SfUQ6RkVv...</td>
-                    <td className="px-4 py-5 text-center">
-                      <button className="text-error hover:scale-110 transition-transform flex items-center justify-center gap-1 mx-auto text-[10px] font-black uppercase tracking-widest">
-                        <Trash2 size={14} />
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+
           </section>
         </div>
         )}

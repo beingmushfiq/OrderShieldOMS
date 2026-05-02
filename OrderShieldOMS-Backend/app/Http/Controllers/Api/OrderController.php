@@ -46,16 +46,72 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'customer_id' => 'required|exists:customers,id',
-            'items' => 'required|array',
-            'items.*.product_id' => 'required|exists:products,id',
+            'customer_name'    => 'required|string|max:255',
+            'customer_email'   => 'required|email|max:255',
+            'customer_phone'   => 'required|string|max:20',
+            'customer_address' => 'required|string',
+            'items'            => 'required|array|min:1',
+            'items.*.id'       => 'required|integer', // This is the product ID
             'items.*.quantity' => 'required|integer|min:1',
         ]);
 
-        // Mock logic for creating order and calculating fraud score
-        // In a real app, this would involve a Service class
-        
-        return response()->json(['message' => 'Order processed through security matrix'], 201);
+        // 1. Find or create customer
+        $customer = \App\Models\Customer::firstOrCreate(
+            ['phone' => $validated['customer_phone']],
+            [
+                'name'             => $validated['customer_name'],
+                'email'            => $validated['customer_email'],
+                'customer_id'      => 'CUS-' . strtoupper(\Illuminate\Support\Str::random(6)),
+                'location'         => $validated['customer_address'],
+
+                'member_since'     => now(),
+                'tier'             => 'Bronze',
+                'fraud_risk_score' => rand(0, 20),
+                'lifetime_value'   => 0,
+            ]
+        );
+
+        // 2. Calculate total and create order
+        $totalAmount = 0;
+        $itemsToCreate = [];
+
+        foreach ($validated['items'] as $itemData) {
+            $product = \App\Models\Product::findOrFail($itemData['id']);
+            $unitPrice = (float) $product->price;
+            $lineTotal = $unitPrice * $itemData['quantity'];
+            
+            $totalAmount += $lineTotal;
+            
+            $itemsToCreate[] = [
+                'product_id'  => $product->id,
+                'quantity'    => $itemData['quantity'],
+                'unit_price'  => $unitPrice,
+                'total_price' => $lineTotal,
+            ];
+        }
+
+        $order = \App\Models\Order::create([
+            'order_id'     => 'ORD-' . strtoupper(\Illuminate\Support\Str::random(8)),
+            'customer_id'  => $customer->id,
+            'total_amount' => $totalAmount,
+            'status'       => 'processing',
+            'fraud_score'  => rand(5, 15),
+            'order_date'   => now(),
+        ]);
+
+        // 3. Create items
+        foreach ($itemsToCreate as $item) {
+            $item['order_id'] = $order->id;
+            \App\Models\OrderItem::create($item);
+            
+            // Decrement stock
+            \App\Models\Product::where('id', $item['product_id'])->decrement('stock_count', $item['quantity']);
+        }
+
+        return response()->json([
+            'message'  => 'Order processed through security matrix',
+            'order_id' => $order->order_id
+        ], 201);
     }
 
     /**
