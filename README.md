@@ -6,7 +6,7 @@
   [![React](https://img.shields.io/badge/React-19-blue?logo=react&logoColor=white)](https://react.dev/)
   [![Vite](https://img.shields.io/badge/Vite-6-purple?logo=vite&logoColor=white)](https://vitejs.dev/)
   [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-  [![Laravel](https://img.shields.io/badge/Laravel-11-FF2D20?logo=laravel&logoColor=white)](https://laravel.com/)
+  [![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel&logoColor=white)](https://laravel.com/)
   [![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
 
 </div>
@@ -15,7 +15,7 @@
 
 ## 📖 Overview
 
-**OrderShield** is a premium, enterprise-grade Order Management System (OMS) designed for high-performance administrative environments. Built with a decoupled architecture, the platform features a lightning-fast React 19 frontend consuming a highly secure Laravel 11 REST API.
+**OrderShield** is a premium, enterprise-grade Order Management System (OMS) designed for high-performance administrative environments. Built with a decoupled architecture, the platform features a lightning-fast React 19 frontend consuming a highly secure Laravel 13 REST API.
 
 The UI is meticulously crafted with **Tailwind CSS 4** and **Framer Motion**, delivering a "Security Hub" aesthetic with glassmorphism, dark-mode compatibility, and smooth micro-animations.
 
@@ -48,7 +48,7 @@ The UI is meticulously crafted with **Tailwind CSS 4** and **Framer Motion**, de
 * **State & Networking:** React Context API + Axios
 
 ### Backend (REST API)
-* **Framework:** Laravel 11 (PHP 8.2+)
+* **Framework:** Laravel 13 (PHP 8.3+)
 * **Database:** SQLite (Dev) / MySQL (Prod)
 * **Authentication:** Laravel Sanctum (Token-based)
 * **Architecture:** Decoupled MVC / API Resource Controllers
